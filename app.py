@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import os
 import sqlite3
 from werkzeug.utils import secure_filename
+from flask import send_file, abort
+import urllib.parse
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -231,6 +233,29 @@ def delete_event(event_id):
     conn.close()
     flash('Event deleted successfully!')
     return redirect(url_for('index'))
+
+@app.route('/download/<int:event_id>/<path:filename>')
+def download_image(event_id, filename):
+    # Path sanitization
+    safe_dir = os.path.abspath('static/uploads')
+    requested_path = os.path.abspath(os.path.join(safe_dir, filename))
+
+    if not requested_path.startswith(safe_dir) or not os.path.exists(requested_path):
+        return abort(403, "Unauthorized or missing file")
+
+    # Get event title for naming
+    conn = get_db_connection()
+    event = conn.execute('SELECT title FROM events WHERE event_id = ?', (event_id,)).fetchone()
+    conn.close()
+
+    if not event:
+        return abort(404, "Event not found")
+
+    # Generate a clean download name like Java Workshop (1).jpg
+    ext = os.path.splitext(filename)[1]
+    safe_title = event['title'].replace('/', '_')  # remove unsafe chars
+    base_name = f"{safe_title}{ext}"
+    return send_file(requested_path, as_attachment=True, download_name=base_name)
 
 if __name__ == '__main__':
     if not os.path.exists('static/uploads'):

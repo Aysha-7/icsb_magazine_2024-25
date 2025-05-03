@@ -54,15 +54,23 @@
     </ul>
 
     <h2 class="text-xl text-cyan-200 font-semibold mt-4">Report:</h2>
-    <p class="text-gray-200 mt-2 mb-6">{{ event['report'] }}</p>
+    <p class="text-gray-200 mt-2 mb-6 whitespace-pre-line">{{ event['report'] }}</p>
 
     <h2 class="text-xl text-cyan-200 font-semibold mt-4 mb-2">Gallery:</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {% for image in images %}
-        <img src="{{ url_for('static', filename=image['image_path'].split('static/')[1]) }}" class="rounded-lg shadow" />
+        <div class="relative group">
+          <img src="{{ url_for('static', filename=image['image_path'].split('static/')[1]) }}"
+               alt="Event Image"
+               class="rounded-lg shadow w-full h-64 object-cover">
+          <a href="{{ url_for('download_image', event_id=event['event_id'], filename=image['image_path'].split('/')[-1]) }}"
+             class="absolute bottom-2 right-2 bg-cyan-600 text-white text-sm px-3 py-1 rounded hover:bg-cyan-700 opacity-0 group-hover:opacity-100 transition-opacity">
+             ⬇ Download
+          </a>
+        </div>
       {% endfor %}
-    </div>
-
+    </div>    
+  
     {% if session.get('admin') %}
     <div class="mt-6 flex gap-4">
       <a href="{{ url_for('edit_event', event_id=event['event_id']) }}" class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded">✏️ Edit</a>
