@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Events - ICSB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .glow-text {
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.6);
+    }
+  </style>
+  
+  <style>
+    .glow-card {
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.4),
+        0 0 24px rgba(0, 255, 255, 0.2),
+        0 0 36px rgba(0, 255, 255, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+  
+    .glow-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        0 0 60px rgba(0, 255, 255, 0.2);
+    }
+  </style>
+  
+  <style>
+    body {
+      background: radial-gradient(ellipse at center, #0f172a 0%, #0a0f1f 100%);
+      color: white;
+    }
+    .glass {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body class="font-sans">
+
+<!-- Header -->
+<div class="text-center py-10">
+  <h1 class="text-4xl font-bold text-cyan-400 glow-text">All ICSB Events</h1>
+</div>
+
+<!-- Search -->
+<div class="max-w-4xl mx-auto px-6 pb-8">
+  <input id="searchInput" type="text" placeholder="Search events..."
+         class="w-full p-2 bg-[#1e293b] text-white rounded border border-cyan-500 placeholder-gray-400">
+</div>
+
+<!-- Event Grid -->
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-12">
+  {% for event in events %}
+  <div class="glass glow-card p-4 rounded-xl event-card" ...
+       data-search="{{ event.title }} {{ event.venue }} {{ event.type }} {{ event.report | default('') }}">
+    {% if event.main_image %}
+      <img src="{{ url_for('static', filename=event.main_image.split('static/')[1]) }}"
+           class="rounded mb-4 w-full h-48 object-cover">
+    {% endif %}
+    <h3 class="text-xl font-semibold text-cyan-300 mb-2">{{ event.title }}</h3>
+    <div class="flex flex-wrap gap-1 mb-2 text-xs">
+      <span class="px-2 py-1 rounded-full bg-cyan-800 text-cyan-100">#{{ event.type }}</span>
+      <span class="px-2 py-1 rounded-full bg-blue-800 text-blue-100">📍{{ event.venue }}</span>
+    </div>
+    <a href="{{ url_for('event_detail', event_id=event.event_id) }}"
+       class="text-blue-400 hover:underline">View Details</a>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="text-center pb-10">
+  <a href="{{ url_for('index') }}" class="text-blue-300 hover:underline">← Back to Homepage</a>
+</div>
+
+<script>
+  const input = document.getElementById('searchInput');
+  input?.addEventListener('input', () => {
+    const keyword = input.value.toLowerCase();
+    document.querySelectorAll('.event-card').forEach(card => {
+      const data = card.getAttribute('data-search').toLowerCase();
+      card.style.display = data.includes(keyword) ? 'block' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>

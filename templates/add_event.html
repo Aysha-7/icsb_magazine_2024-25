@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Event - ICSB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(ellipse at center, #0f172a 0%, #0a0f1f 100%);
+      color: white;
+    }
+
+    .glow-container {
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 2px solid rgba(0, 255, 255, 0.25);
+      border-radius: 1rem;
+      box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.3),
+        0 0 40px rgba(0, 255, 255, 0.25),
+        0 0 60px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .glow-container:hover {
+      box-shadow:
+        0 0 25px rgba(0, 255, 255, 0.5),
+        0 0 60px rgba(0, 255, 255, 0.35),
+        0 0 90px rgba(0, 255, 255, 0.25);
+    }
+
+    .glow-text {
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    }
+
+    .glow-button {
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    }
+
+    label {
+      color: #a5f3fc;
+    }
+  </style>
+</head>
+<body class="font-sans">
+
+<div class="max-w-3xl mx-auto py-12 px-6">
+  <div class="p-8 glow-container">
+
+    <h2 class="text-3xl font-bold text-cyan-300 mb-6 text-center glow-text">Add New Event</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      <!-- Title -->
+      <div class="mb-4">
+        <label class="block mb-1">Event Title</label>
+        <input type="text" name="title" class="w-full p-2 rounded bg-[#1e293b] text-white" required>
+      </div>
+
+      <!-- Dates -->
+      <div class="mb-4">
+        <label class="block mb-1">Event Date(s) <span class="text-gray-400">(comma-separated)</span></label>
+        <input type="text" name="dates" class="w-full p-2 rounded bg-[#1e293b] text-white" required>
+      </div>
+
+      <!-- Venue -->
+      <div class="mb-4">
+        <label class="block mb-1">Venue</label>
+        <input type="text" name="venue" class="w-full p-2 rounded bg-[#1e293b] text-white" required>
+      </div>
+
+      <!-- Type -->
+      <div class="mb-4">
+        <label class="block mb-1">Event Type</label>
+        <input type="text" name="type" class="w-full p-2 rounded bg-[#1e293b] text-white" placeholder="Workshop, Celebration, etc." required>
+      </div>
+
+      <!-- Guests -->
+      <div class="mb-4">
+        <label class="block mb-1">Guest Name(s) <span class="text-gray-400">(comma-separated)</span></label>
+        <input type="text" name="guests" class="w-full p-2 rounded bg-[#1e293b] text-white" required>
+      </div>
+
+      <!-- Organizers -->
+      <div class="mb-4">
+        <label class="block mb-1">Organizer Name(s) <span class="text-gray-400">(comma-separated)</span></label>
+        <input type="text" name="organizers" class="w-full p-2 rounded bg-[#1e293b] text-white" required>
+      </div>
+
+      <!-- Report -->
+      <div class="mb-4">
+        <label class="block mb-1">Event Report</label>
+        <textarea name="report" rows="5" class="w-full p-2 rounded bg-[#1e293b] text-white" required></textarea>
+      </div>
+
+      <!-- Images -->
+      <div class="mb-4">
+        <label class="block mb-1">Upload Images (max 20)</label>
+        <input type="file" name="images" accept="image/*" multiple class="w-full p-2 bg-[#1e293b] text-white">
+      </div>
+
+      <!-- Main Image Name -->
+      <div class="mb-6">
+        <label class="block mb-1">Main Image Filename</label>
+        <input type="text" name="main_image_name" class="w-full p-2 rounded bg-[#1e293b] text-white" placeholder="e.g. img1.jpg">
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-between items-center">
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded glow-button">Add Event</button>
+        <a href="{{ url_for('index') }}" class="text-blue-400 hover:underline">← Back to Home</a>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+</body>
+</html>

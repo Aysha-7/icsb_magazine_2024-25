@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ICSB | Magazine 2024–25</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0a0f1f;
+      color: white;
+      scroll-behavior: smooth;
+    }
+    .glow-text {
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    }
+    .glow-button {
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+    }
+    .bg-section {
+      background: url("static/uploads/lock.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .icon-glow {
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+    .icon-glow:hover {
+      filter: drop-shadow(0 0 6px #0ff) drop-shadow(0 0 12px #0ff);
+      transform: scale(1.1);
+    }
+  </style>
+  <style>
+    .glow-card {
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.4),
+        0 0 24px rgba(0, 255, 255, 0.2),
+        0 0 36px rgba(0, 255, 255, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+  
+    .glow-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        0 0 60px rgba(0, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+
+<!-- Hero Section -->
+<!-- Hero Section -->
+<section class="bg-section min-h-screen w-full flex items-center justify-center p-4">
+  <div class="relative backdrop-blur-md bg-white/5 border border-white/10 shadow-2xl max-w-4xl w-full rounded-2xl p-10 text-white text-center">
+
+    {% if session.get('admin') %}
+    <div class="absolute top-4 right-6 flex gap-4 z-10">
+      <a href="{{ url_for('logout') }}" class="text-cyan-300 hover:text-red-400 text-sm glow-text font-semibold">Logout</a>
+    </div>
+    {% endif %}
+    <img src="static/uploads/icsb.png" alt="ICSB Logo" class="mx-auto w-16 h-16 mb-4 rounded-full object-contain">
+    <h1 class="text-4xl md:text-5xl font-bold text-cyan-300 glow-text mb-2">ICSB Magazine</h1>
+    <h2 class="text-3xl font-extrabold text-white glow mb-4">2024–25 Edition</h2>
+    <p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+      Celebrating innovation and excellence across IoT, Cybersecurity & Blockchain through curated workshops, guest talks, and vibrant student achievements.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 mb-10">
+      <a href="/all_events" class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full font-semibold glow-button">Explore Events</a>
+      {% if session.get('admin') %}
+      <a href="{{ url_for('add_event') }}" class="border border-cyan-500 text-cyan-300 hover:text-white hover:bg-cyan-600 px-6 py-2 rounded-full">+ Add Event</a>
+      {% endif %}
+      {% if not session.get('admin') %}
+<a href="{{ url_for('admin_login') }}" class="border border-cyan-500 text-cyan-300 hover:text-white hover:bg-cyan-600 px-6 py-2 rounded-full">Admin Login</a>
+{% endif %}
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div><h3 class="text-3xl font-bold text-cyan-300">19+</h3><p class="text-gray-300 mt-2">Total Events</p></div>
+      <div><h3 class="text-3xl font-bold text-cyan-300">7+</h3><p class="text-gray-300 mt-2">Workshops</p></div>
+      <div><h3 class="text-3xl font-bold text-cyan-300">10+</h3><p class="text-gray-300 mt-2">Guest Speakers</p></div>
+      <div><h3 class="text-3xl font-bold text-cyan-300">6+</h3><p class="text-gray-300 mt-2">Celebrations</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Carousel -->
+<section class="py-20 px-6 bg-[#0a0f1f]">
+  <div class="max-w-7xl mx-auto text-center mb-10">
+    <h2 class="text-3xl font-bold text-cyan-300 glow-text mb-4">Featured Events</h2>
+    <p class="text-gray-400 max-w-xl mx-auto">Scroll through some of the top highlights from ICSB Magazine 2024–25.</p>
+  </div>
+
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      {% for event in events %}
+      <div class="swiper-slide p-4 event-card"
+           data-search="{{ event.title }} {{ event.venue }} {{ event.type }} {{ event.report | default('') }}">
+           <div class="glass glow-card p-4 rounded-xl h-full flex flex-col justify-between">
+          {% if event.main_image %}
+            <img src="{{ url_for('static', filename=event.main_image.split('static/')[1]) }}"
+                 class="rounded mb-4 w-full h-48 object-cover">
+          {% endif %}
+          <div>
+            <h3 class="text-lg font-bold text-cyan-300 mb-1">{{ event.title }}</h3>
+            <div class="flex flex-wrap gap-1 mb-2 text-xs">
+              <span class="px-2 py-1 rounded-full bg-cyan-800 text-cyan-100">#{{ event.type }}</span>
+              <span class="px-2 py-1 rounded-full bg-blue-800 text-blue-100">📍{{ event.venue }}</span>
+            </div>
+            <a href="{{ url_for('event_detail', event_id=event.event_id) }}"
+               class="text-blue-400 hover:underline">View Details</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination mt-4"></div>
+  </div>
+
+  <div class="text-center mt-6">
+    <a href="{{ url_for('all_events') }}" class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded-full glow-button text-lg">Show All Events</a>
+  </div>
+</section>
+
+<!-- Follow Us Button -->
+<!-- Follow Us Button -->
+<div class="relative z-10 text-center mt-8 mb-12">
+  <button onclick="openModal()" class="inline-block px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full glow-button font-semibold">
+    Follow Us
+  </button>
+</div>
+
+<!-- Modal Backdrop & Popup -->
+<div id="socialModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70">
+  <div class="glass max-w-sm w-full mx-auto p-6 rounded-lg text-center relative">
+    <button onclick="closeModal()" class="absolute top-2 right-3 text-gray-400 hover:text-white text-xl">&times;</button>
+    <h2 class="text-xl font-semibold text-cyan-300 mb-4">Connect with Us</h2>
+    <div class="flex justify-center gap-6">
+      <!-- Instagram -->
+      <!-- Instagram -->
+<a href="https://www.instagram.com/icsb.pace?igsh=OXJ6a3FhaW11ZDQy" target="_blank"
+class="flex flex-col items-center hover:scale-110 transition transform duration-300">
+<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg"
+    class="w-8 h-8 invert mb-1 icon-glow" alt="Instagram">
+<span class="text-sm text-white">Instagram</span>
+</a>
+
+<!-- LinkedIn -->
+<a href="https://www.linkedin.com/company/icsb-pace/" target="_blank"
+class="flex flex-col items-center hover:scale-110 transition transform duration-300">
+<img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg"
+    class="w-8 h-8 invert mb-1 icon-glow" alt="LinkedIn">
+<span class="text-sm text-white">LinkedIn</span>
+</a>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('socialModal').classList.remove('hidden');
+    document.getElementById('socialModal').classList.add('flex');
+  }
+
+  function closeModal() {
+    document.getElementById('socialModal').classList.remove('flex');
+    document.getElementById('socialModal').classList.add('hidden');
+  }
+</script>
+
+<!-- Footer -->
+<footer class="bg-[#060b17] text-center text-gray-400 py-6">
+  <p>&copy; 2024 ICSB Magazine | Dept of CSE (IoT, Cybersecurity & Blockchain)</p>
+  <a href="#" class="text-cyan-400 hover:underline block mt-2">Back to Top</a>
+</footer>
+
+<!-- Swiper Script -->
+<!-- Swiper Section -->
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    spaceBetween: 30,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      640: { slidesPerView: 1 },
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    },
+  });
+</script>
+
+</body>
+</html>

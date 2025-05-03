@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ event['title'] }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(ellipse at center, #0f172a 0%, #0a0f1f 100%);
+      color: white;
+    }
+    .glass {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glow {
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body class="font-sans">
+
+<div class="max-w-5xl mx-auto px-4 py-12">
+
+  <div class="glass p-8 rounded-lg shadow-lg">
+    <h1 class="text-4xl font-bold text-cyan-300 glow mb-4">{{ event['title'] }}</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300 mb-6">
+      <div>
+        <strong>Venue:</strong> {{ event['venue'] }}<br>
+        <strong>Type:</strong> {{ event['type'] }}
+      </div>
+      <div>
+        <strong>Dates:</strong>
+        {% for d in dates %}
+          {{ d['date'] }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <h2 class="text-xl text-cyan-200 font-semibold mt-4">Guests:</h2>
+    <ul class="list-disc list-inside text-gray-300 mb-4">
+      {% for guest in guests %}
+        <li>{{ guest['name'] }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2 class="text-xl text-cyan-200 font-semibold mt-4">Organizers:</h2>
+    <ul class="list-disc list-inside text-gray-300 mb-4">
+      {% for organizer in organizers %}
+        <li>{{ organizer['name'] }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2 class="text-xl text-cyan-200 font-semibold mt-4">Report:</h2>
+    <p class="text-gray-200 mt-2 mb-6">{{ event['report'] }}</p>
+
+    <h2 class="text-xl text-cyan-200 font-semibold mt-4 mb-2">Gallery:</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {% for image in images %}
+        <img src="{{ url_for('static', filename=image['image_path'].split('static/')[1]) }}" class="rounded-lg shadow" />
+      {% endfor %}
+    </div>
+
+    {% if session.get('admin') %}
+    <div class="mt-6 flex gap-4">
+      <a href="{{ url_for('edit_event', event_id=event['event_id']) }}" class="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded">✏️ Edit</a>
+      <form action="{{ url_for('delete_event', event_id=event['event_id']) }}" method="POST" onsubmit="return confirm('Delete this event?');">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">🗑 Delete</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}" class="inline-block mt-6 text-blue-400 hover:underline">← Back to Home</a>
+  </div>
+
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login - ICSB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(ellipse at center, #0f172a 0%, #0a0f1f 100%);
+      color: white;
+    }
+    .glow-card {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), 0 0 10px rgba(0, 255, 255, 0.2);
+      border: 2px solid rgba(0, 255, 255, 0.2);
+    }
+    .glow-text {
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+    }
+    .glow-button {
+      box-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center h-screen font-sans">
+
+  <div class="p-8 rounded-xl glow-card w-full max-w-md text-center bg-[#0f172a]">
+    <h1 class="text-3xl font-bold text-cyan-300 glow-text mb-6">Admin Login</h1>
+    
+    <form method="POST">
+      <div class="mb-4 text-left">
+        <label class="block text-sm mb-1">Username</label>
+        <input type="text" name="username" class="w-full p-2 rounded bg-[#1e293b] text-white focus:outline-none">
+      </div>
+      <div class="mb-6 text-left">
+        <label class="block text-sm mb-1">Password</label>
+        <input type="password" name="password" class="w-full p-2 rounded bg-[#1e293b] text-white focus:outline-none">
+      </div>
+      <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded glow-button transition">Login</button>
+    </form>
+
+    <a href="/" class="block mt-4 text-blue-400 hover:underline text-sm">← Back to Home</a>
+  </div>
+
+</body>
+</html>
+
+
