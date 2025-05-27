@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import os
 import sqlite3
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash
 from flask import send_file, abort
 import urllib.parse
 
@@ -65,13 +66,18 @@ def admin_login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username == 'admin' and password == 'icsb2024':
+
+        conn = get_db_connection()
+        user = conn.execute("SELECT * FROM admin_users WHERE username = ?", (username,)).fetchone()
+        conn.close()
+
+        if user and check_password_hash(user['password_hash'], password):
             session['admin'] = True
             return redirect(url_for('index'))
-
         else:
             flash('Invalid credentials')
             return redirect(url_for('admin_login'))
+
     return render_template('admin_login.html')
 
 @app.route('/logout')
